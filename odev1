@@ -1,0 +1,80 @@
+1. Geleneksel Dosyalama Sistemlerinin Çalışma Şekli ve Örnek Uygulama
+Geleneksel dosyalama sistemlerinde veriler, bağımsız dosyalar içinde saklanır. 
+Verilere genellikle sıralı veya doğrudan erişim sağlanır. 
+python kullanıldı
+###############################
+import os
+dosya_yolu = os.path.join(os.getcwd(), 'veriler.txt')
+with open(dosya_yolu, 'w') as dosya:
+    dosya.write('101,ali,bilgisayar\n')
+    dosya.write('102,zeynep,elektrik\n')
+
+print(f"veriler '{dosya_yolu}' konumuna kaydedildi.")
+
+with open(dosya_yolu, 'r') as dosya:
+    veriler = dosya.readlines()
+    print("dosyadan okunan veriler:")
+    for veri in veriler:
+        print(veri.strip())
+#######################################
+
+2. Geleneksel Dosyalama Sistemleri ile Veritabanı Yönetim Sistemlerinin Benzerlik ve Farklılıkları
+
+Benzerlikler:
+Her iki sistem de verileri saklamak amacıyla kullanılır.
+Veri erişimi sıralı veya doğrudan yapılabilir.
+
+Farklılıklar:
+Geleneksel dosyalama sistemleri verileri bağımsız dosyalarda saklar, VTYS ise verileri ilişkisel tablolarda tutar.
+VTYS, veri güvenliği ve bütünlüğünü sağlar.
+
+3. VTYS'nin Geleneksel Sisteme Göre Üstün Özellikleri
+Veri tekrarını azaltır: Aynı verinin birden fazla yerde saklanmasını önler.
+Veri tutarlılığı sağlar: Güncellenen bir veri, ilişkili olduğu her yerde güncellenir.
+Veri güvenliği: Yetkilendirme sayesinde kimlerin veriye erişebileceği kontrol edilir.
+Çoklu kullanıcı desteği: Aynı anda birden fazla kullanıcı veriye erişebilir.
+
+4. Veritabanının Görevi ve Kullanım Alanları
+Veritabanı: Verileri düzenli bir şekilde saklamak ve ihtiyaç halinde hızlıca erişimi sağlamak için kullanılır.
+Kullanım Alanları: Okullar (öğrenci ve ders bilgileri), hastaneler (hasta ve tedavi bilgileri), bankalar (hesap ve müşteri bilgileri), e-ticaret (ürün ve sipariş bilgileri)
+
+5. Tablo, Satır ve Sütun Kavramları
+Tablo: Verilerin satır ve sütunlar halinde düzenlendiği yapıdır.
+Satır: Her bir veri kümesine karşılık gelir.
+Sütun: Verilerin türünü belirten yapıdır (isim, yaş, fiyat vb.).
+
+6. Birincil Anahtar ve Yabancı Anahtar Kavramları ve Farkları
+Birincil Anahtar: Tablodaki satırları benzersiz şekilde tanımlar.
+Yabancı Anahtar: Başka bir tablonun birincil anahtarını referans alan sütundur.
+Fark: Birincil anahtar benzersizdir, yabancı anahtar ise bir tabloyu diğerine bağlar.
+
+7. Veritabanı Kullanıcı Türleri
+Veritabanı Yöneticisi (DBA): Veritabanının tasarımından ve bakımından sorumlu.
+Uygulama Programcısı: Veritabanı ile iletişim kuran yazılımlar geliştirir.
+Sorgu Dili Kullanıcıları: Veritabanına sorgular yazar.
+Son Kullanıcılar: Hazır uygulamalar üzerinden verilerle işlem yapar.
+
+8. Örnek Veritabanı Yetkilendirme Şeması
+Admin:     Okuma - Evet | Ekleme - Evet  | Değiştirme - Evet  | Silme - Evet
+Muhasebe:  Okuma - Evet | Ekleme - Evet  | Değiştirme - Hayır | Silme - Hayır
+Kullanici: Okuma - Evet | Ekleme - Hayır | Değiştirme - Hayır | Silme - Hayır
+
+9. Veritabanı ve VTYS'nin Farkı
+Veritabanı: Verilerin düzenli saklandığı yerdir.
+VTYS: Veritabanını yönetmek için kullanılan yazılım sistemidir (MySQL, Oracle).
+
+10. İlişkisel Veri Modeli
+Verilerin tablolar halinde saklandığı ve tablolar arasında ilişkilerin kurulduğu modeldir.
+Birincil ve yabancı anahtarlar ile tablolar birbirine bağlanır.
+
+11. Öğrenci Bilgi Sistemi İçin Veritabanı Tasarımı
+Tablolar:
+Öğrenci: ogr_no (PK), ad, soyad, bolum_kodu (FK)
+Bölüm: bolum_kodu (PK), bolum_adi
+Ders: ders_kodu (PK), ders_adi, bolum_kodu (FK)
+Notlar: not_id (PK), ogr_no (FK), ders_kodu (FK), not
+
+İlişkiler:
+Öğrenci tablosundaki "bolum_kodu", Bölüm tablosundaki "bolum_kodu" ile ilişkilidir.
+Notlar tablosundaki "ogr_no", Öğrenci tablosundaki "ogr_no" ile ilişkilidir.
+Notlar tablosundaki "ders_kodu", Ders tablosundaki "ders_kodu" ile ilişkilidir.
