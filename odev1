@@ -68,13 +68,20 @@ Verilerin tablolar halinde saklandığı ve tablolar arasında ilişkilerin kuru
 Birincil ve yabancı anahtarlar ile tablolar birbirine bağlanır.
 
 11. Öğrenci Bilgi Sistemi İçin Veritabanı Tasarımı
-Tablolar:
-Öğrenci: ogr_no (PK), ad, soyad, bolum_kodu (FK)
-Bölüm: bolum_kodu (PK), bolum_adi
-Ders: ders_kodu (PK), ders_adi, bolum_kodu (FK)
-Notlar: not_id (PK), ogr_no (FK), ders_kodu (FK), not
-
-İlişkiler:
-Öğrenci tablosundaki "bolum_kodu", Bölüm tablosundaki "bolum_kodu" ile ilişkilidir.
-Notlar tablosundaki "ogr_no", Öğrenci tablosundaki "ogr_no" ile ilişkilidir.
-Notlar tablosundaki "ders_kodu", Ders tablosundaki "ders_kodu" ile ilişkilidir.
+Tablo:
+| id  | ad      | soyad    | doğum_tarihi | cinsiyet | telefon       | email               | kayıt_tarihi       |
+|-----|---------|----------|--------------|----------|---------------|---------------------|--------------------|
+| 1   | Ahmet   | Yılmaz   | 2001-04-12   | Erkek    | 05001234567   | ahmet@email.com     | 2025-03-01         |
+| 2   | Ayşe    | Kaya     | 2002-06-25   | Kadın    | 05009876543   | ayse@email.com      | 2025-03-02         |
+| 3   | Mehmet  | Demir    | 2000-09-18   | Erkek    | 05007654321   | mehmet@email.com    | 2025-03-03         |
+| 4   | Elif    | Aydın    | 2003-01-30   | Kadın    | 05005432109   | elif@email.com      | 2025-03-04         |
+| 5   | Can     | Şahin    | 2001-11-15   | Erkek    | 05004321098   | can@email.com       | 2025-03-05         |
+Tablo Açıklama
+id: Her öğrencinin benzersiz kimlik numarası  
+ad: Öğrencinin adı  
+soyad: Öğrencinin soyadı  
+doğum_tarihi: Öğrencinin doğum tarihi (YYYY-AA-GG)  
+cinsiyet: Öğrencinin cinsiyeti (Erkek/Kadın)  
+telefon: İletişim numarası  
+email: Öğrencinin e-posta adresi  
+kayıt_tarihi: Sisteme kayıt olduğu tarih  
