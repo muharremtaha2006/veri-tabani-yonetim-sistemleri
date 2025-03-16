@@ -1,0 +1,71 @@
+CREATE DATABASE Kutuphane;
+USE Kutuphane;
+
+-- Adresler tablosu
+CREATE TABLE Adresler (
+    adresNo INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    sehir NVARCHAR(100),
+    cadde NVARCHAR(100),
+    mahalle NVARCHAR(100),
+    binaNo INT,
+    postaKodu INT,
+    ulke NVARCHAR(100)
+);
+
+-- Uyeler tablosu
+CREATE TABLE Uyeler (
+    uyeNo INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    uyeAdi NVARCHAR(50) NOT NULL,
+    uyeSoyadi NVARCHAR(50) NOT NULL,
+    eposta NVARCHAR(100),
+    telefon NVARCHAR(100),
+    cinsiyet CHAR(2),
+    adresNo INT FOREIGN KEY REFERENCES Adresler(adresNo)
+);
+
+-- Kutuphane tablosu
+CREATE TABLE Kutuphane (
+    kutuphaneNo INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    kutuphaneIsmi NVARCHAR(100) NOT NULL,
+    aciklama NVARCHAR(150),
+    adresNo INT FOREIGN KEY REFERENCES Adresler(adresNo)
+);
+
+-- Kategoriler tablosu
+CREATE TABLE Kategoriler (
+    kategoriNo INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    kategoriAdi NVARCHAR(100) NOT NULL
+);
+
+-- Yazarlar tablosu
+CREATE TABLE Yazarlar (
+    yazarNo INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    yazarAdi NVARCHAR(100) NOT NULL,
+    yazarSoyadi NVARCHAR(100) NOT NULL
+);
+
+-- Kitaplar tablosu
+CREATE TABLE Kitaplar (
+    ISBN INT NOT NULL PRIMARY KEY,
+    sayfaSayisi INT,
+    kitapAdi NVARCHAR(100) NOT NULL,
+    yayinTarihi NVARCHAR(100),
+    kategoriNo INT FOREIGN KEY REFERENCES Kategoriler(kategoriNo)
+);
+
+-- Kitap-Yazar ilişkisini tutan tablo
+CREATE TABLE KitapYazar (
+    ISBN INT FOREIGN KEY REFERENCES Kitaplar(ISBN),
+    yazarNo INT FOREIGN KEY REFERENCES Yazarlar(yazarNo),
+    PRIMARY KEY (ISBN, yazarNo)
+);
+
+-- Emanet tablosu
+CREATE TABLE Emanet (
+    emanetNo INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    emanetTarihi NVARCHAR(100),
+    teslimTarihi NVARCHAR(100),
+    uyeNo INT FOREIGN KEY REFERENCES Uyeler(uyeNo),
+    kutuphaneNo INT FOREIGN KEY REFERENCES Kutuphane(kutuphaneNo),
+    ISBN INT FOREIGN KEY REFERENCES Kitaplar(ISBN)
+);
