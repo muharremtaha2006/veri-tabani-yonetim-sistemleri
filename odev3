@@ -1,0 +1,137 @@
+-- Veritabanını oluştur
+CREATE DATABASE galeri;
+GO
+
+-- Veritabanını kullan
+USE galeri;
+GO
+
+-- Müşteri tablosu
+CREATE TABLE musteri (
+    Mno INT PRIMARY KEY IDENTITY(1,1),
+    Madi NVARCHAR(50),
+    Msoyadi NVARCHAR(50),
+    Madres NVARCHAR(50),
+    Mtelefon NVARCHAR(50)
+);
+
+-- Araçlar tablosu
+CREATE TABLE araclar (
+    Aracno INT PRIMARY KEY IDENTITY(1,1),
+    yil INT,
+    model NVARCHAR(50),
+    marka NVARCHAR(50),
+    plaka NVARCHAR(50),
+    fiyat FLOAT
+);
+
+-- Satışlar tablosu
+CREATE TABLE satislar (
+    satisNo INT PRIMARY KEY,
+    Mno INT FOREIGN KEY REFERENCES musteri(Mno),
+    Aracno INT FOREIGN KEY REFERENCES araclar(Aracno),
+    SatisTarihi DATETIME,
+    Fiyat FLOAT
+);
+
+-- Alışlar tablosu
+CREATE TABLE alislar (
+    alisNo INT PRIMARY KEY,
+    Mno INT FOREIGN KEY REFERENCES musteri(Mno),
+    Aracno INT FOREIGN KEY REFERENCES araclar(Aracno),
+    AlisTarihi DATETIME,
+    Fiyat FLOAT
+);
+
+-- Müşteri verileri
+INSERT INTO musteri VALUES ('Fatma Nur','Kılıçkaya','Kayseri','45667');
+INSERT INTO musteri VALUES ('Sıla','Aydoğdu','Ankara','12354');
+INSERT INTO musteri VALUES ('İbrahim','Metin','İstanbul','78652');
+INSERT INTO musteri VALUES ('Mustafa','Erdoğan','İzmir','75525');
+INSERT INTO musteri VALUES ('Furkan','Altıntop','Manisa','48963');
+
+-- Araç verileri
+INSERT INTO araclar VALUES (2002, 'GLA', 'Mercedes', '38G12', 65000);
+INSERT INTO araclar VALUES (2020, 'M5', 'BMW', '47S21', 185000);
+INSERT INTO araclar VALUES (2025, 'EGEA', 'Fiat', '36Z10', 1800000);
+INSERT INTO araclar VALUES (2023, 'COROLLA', 'Toyota', '58A14', 85000);
+INSERT INTO araclar VALUES (2024, 'A8', 'Audi', '30B84', 95000);
+
+-- Satışlar
+INSERT INTO satislar VALUES (1, 1, 1, '2024-01-01', 800000);
+INSERT INTO satislar VALUES (2, 2, 3, '2023-01-01', 500000);
+INSERT INTO satislar VALUES (3, 3, 5, '2022-01-01', 20000000);
+INSERT INTO satislar VALUES (4, 4, 2, '2024-01-01', 30000000);
+
+-- Alışlar
+INSERT INTO alislar VALUES (1, 1, 2, '2025-01-01', 882000);
+INSERT INTO alislar VALUES (2, 1, 4, '2023-01-01', 8820003);
+INSERT INTO alislar VALUES (3, 1, 1, '2021-01-01', 88200034);
+INSERT INTO alislar VALUES (4, 1, 5, '2024-01-01', 800034);
+
+-- SORULAR
+
+-- 1. Satış yapılan müşterilerin isimlerini listeleyin
+SELECT DISTINCT M.Madi, M.Msoyadi
+FROM musteri M
+JOIN satislar S ON M.Mno = S.Mno;
+
+-- 2. Hangi müşteriden hangi aracın alındığını listeleyin
+SELECT M.Madi, M.Msoyadi, A.marka, A.model
+FROM alislar Al
+JOIN musteri M ON Al.Mno = M.Mno
+JOIN araclar A ON Al.Aracno = A.Aracno;
+
+-- 3. Her bir müşteriden alınan araçların sayısını listeleyin
+SELECT M.Madi, M.Msoyadi, COUNT(*) AS Arac_Sayisi
+FROM alislar Al
+JOIN musteri M ON Al.Mno = M.Mno
+GROUP BY M.Madi, M.Msoyadi;
+
+-- 4. Satılan araçların marka ve modelini listeleyin
+SELECT DISTINCT A.marka, A.model
+FROM satislar S
+JOIN araclar A ON S.Aracno = A.Aracno;
+
+-- 5. Toplam satış ve alım tutarlarını ve farkını bulun
+SELECT 
+    (SELECT SUM(Fiyat) FROM satislar) AS Toplam_Satis, 
+    (SELECT SUM(Fiyat) FROM alislar) AS Toplam_Alim,
+    (SELECT SUM(Fiyat) FROM satislar) - (SELECT SUM(Fiyat) FROM alislar) AS Fark;
+
+-- 6. Hiç satışı yapılmamış araçları listeleyin
+SELECT A.marka, A.model, A.plaka
+FROM araclar A
+LEFT JOIN satislar S ON A.Aracno = S.Aracno
+WHERE S.Aracno IS NULL;
+
+-- 7. Her aracın ortalama satış tutarını bulun
+SELECT A.marka, A.model, AVG(S.Fiyat) AS Ortalama_Satis
+FROM satislar S
+JOIN araclar A ON S.Aracno = A.Aracno
+GROUP BY A.marka, A.model;
+
+-- 8. Alımı ve satışı yapılan tüm araçların marka, model ve alım-satış sayılarını listeleyin
+SELECT 
+    A.marka, 
+    A.model,
+    COUNT(DISTINCT Al.alisNo) AS Alim_Sayisi,
+    COUNT(DISTINCT S.satisNo) AS Satis_Sayisi
+FROM araclar A
+LEFT JOIN alislar Al ON A.Aracno = Al.Aracno
+LEFT JOIN satislar S ON A.Aracno = S.Aracno
+GROUP BY A.marka, A.model;
+
+-- 9. 20000’den fazla tutara satılan araçları kimlerin hangi aracı aldığını bulun
+SELECT M.Madi, M.Msoyadi, A.marka, A.model, S.Fiyat
+FROM satislar S
+JOIN musteri M ON S.Mno = M.Mno
+JOIN araclar A ON S.Aracno = A.Aracno
+WHERE S.Fiyat > 20000;
+
+-- 10. Tokat’ta bulunan müşterilere satışı yapılan araçları listeleyin
+SELECT M.Madi, M.Msoyadi, A.marka, A.model
+FROM satislar S
+JOIN musteri M ON S.Mno = M.Mno
+JOIN araclar A ON S.Aracno = A.Aracno
+WHERE M.Madres LIKE '%Tokat%';
